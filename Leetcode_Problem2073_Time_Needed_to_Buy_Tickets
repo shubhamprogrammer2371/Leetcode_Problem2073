@@ -1,0 +1,62 @@
+int timeRequiredToBuy(int* tickets, int ticketsSize, int k){
+    int i = 0 , time = 0;
+    while(1)
+    {
+        if(tickets[i] != 0)
+        {
+            tickets[i] -= 1;
+            time += 1;
+        }
+        if(tickets[k] == 0)
+            break;
+        i = (i == (ticketsSize - 1)) ? 0 : i + 1;
+    }
+    return time;
+}
+
+
+-----------------------------------------------------------------------------------------------------------------------------------
+
+
+#define N 10000 
+int queue[N] , head = -1 , tail = -1; 
+void enqueue(int x) 
+{
+    if(tail == N-1) 
+        exit(1); 
+    else if((head == -1) && (tail == -1))
+        head++;
+    queue[++tail] = x;
+}
+void dequeue() 
+{
+    if((head == -1) && (tail == -1)) 
+        exit(1);
+    else if(head == tail) 
+        head = tail = -1;
+    else if(!((head == -1) && (tail == -1)))
+        queue[head++];
+}
+int peek() 
+{
+    return !((head == -1) && (tail == -1)) ? queue[head] : 0;
+}
+int timeRequiredToBuy(int* tickets, int ticketsSize, int k){
+    int time = 0;
+    for(int i = 0; i < ticketsSize; i++)
+        enqueue(i);
+    while(1) 
+    {
+       time++; 
+       int front = peek();
+       dequeue();
+       tickets[front] = (tickets[front] >= 1) ? tickets[front] - 1 : tickets[front];
+       if(tickets[front] == 0 && front != k)
+	       continue;
+       if(tickets[front] == 0 && front == k)
+	       break;
+       enqueue(front);
+    }
+    head = tail = -1;
+    return time;
+}
